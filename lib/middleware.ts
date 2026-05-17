@@ -5,11 +5,11 @@ export function verifyToken(request: NextRequest) {
   try {
     const token = request.cookies.get('token')?.value;
 
-    if (!token) {
+    if (!token || !process.env.NEXTAUTH_SECRET) {
       return null;
     }
 
-    const decoded = jwt.verify(token, process.env.NEXTAUTH_SECRET || 'your-secret-key');
+    const decoded = jwt.verify(token, process.env.NEXTAUTH_SECRET);
     return decoded;
   } catch (error) {
     return null;

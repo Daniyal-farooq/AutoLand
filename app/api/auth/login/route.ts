@@ -33,9 +33,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!process.env.NEXTAUTH_SECRET) {
+      return NextResponse.json(
+        { error: 'Server configuration error: NEXTAUTH_SECRET is not set' },
+        { status: 500 }
+      );
+    }
+
     const token = jwt.sign(
       { id: admin._id, email: admin.email },
-      process.env.NEXTAUTH_SECRET || 'your-secret-key',
+      process.env.NEXTAUTH_SECRET,
       { expiresIn: '7d' }
     );
 
@@ -48,6 +55,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      path: '/',
       maxAge: 7 * 24 * 60 * 60, // 7 days
     });
 

@@ -52,10 +52,13 @@ export default function AdminDashboard() {
     fetchData();
   }, []);
 
-  const checkAuth = () => {
-    // Check if token exists in cookies
-    const hasCookie = document.cookie.includes('token=');
-    if (!hasCookie) {
+  const checkAuth = async () => {
+    try {
+      const res = await fetch('/api/auth/me');
+      if (!res.ok) {
+        router.push('/admin/login');
+      }
+    } catch {
       router.push('/admin/login');
     }
   };

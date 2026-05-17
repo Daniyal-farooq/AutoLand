@@ -237,185 +237,187 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Company Info Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-secondary/20 to-background relative overflow-hidden">
-          {/* Glassmorphic Ferrari Background */}
-          <FerrariParallax scrollRange={[0, 1000]} offsetX={-50} />
-          
-          <ParallaxSection className="absolute inset-0 opacity-5">
-            <div className="text-6xl font-bold text-accent">Excellence</div>
-          </ParallaxSection>
-          <div className="max-w-7xl mx-auto relative z-10">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={containerVariants}
-            >
-              <motion.h2
-                variants={itemVariants}
-                className="text-4xl md:text-5xl font-bold text-foreground mb-12 text-center"
-              >
-                Why Choose Auto Land International
-              </motion.h2>
+        {/* Why Choose Auto Land International + What Our Clients Say — Shared Ferrari Parallax */}
+        <section className="relative">
+          {/* Single Ferrari parallax spanning both sections */}
+          <FerrariParallax scrollRange={[0, 2000]} offsetX={0} />
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="relative z-10">
+            {/* Why Choose Auto Land International */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-secondary/20 to-background relative overflow-hidden">
+              <ParallaxSection className="absolute inset-0 opacity-5">
+                <div className="text-6xl font-bold text-accent">Excellence</div>
+              </ParallaxSection>
+              <div className="max-w-7xl mx-auto relative z-10">
                 <motion.div
-                  variants={itemVariants}
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  className="cursor-pointer text-center p-8 rounded-xl border border-border/50 hover:border-primary/50 bg-secondary/30 hover:bg-secondary/50 transition-all duration-300"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={containerVariants}
                 >
-                  <motion.div
-                    className="w-16 h-16 bg-gradient-to-br from-primary/40 to-accent/40 rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer"
-                    whileHover={{ scale: 1.1, rotate: 10 }}
-                    transition={{ type: 'spring', stiffness: 200 }}
+                  <motion.h2
+                    variants={itemVariants}
+                    className="text-4xl md:text-5xl font-bold text-foreground mb-12 text-center"
                   >
-                    <span className="text-3xl">🏆</span>
-                  </motion.div>
-                  <h3 className="text-2xl font-bold text-foreground mb-3">Premium Quality</h3>
-                  <p className="text-muted-foreground">
-                    Carefully curated collection of verified authentic exotic vehicles
-                  </p>
-                </motion.div>
+                    Why Choose Auto Land International
+                  </motion.h2>
 
-                <motion.div
-                  variants={itemVariants}
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  className="cursor-pointer text-center p-8 rounded-xl border border-border/50 hover:border-primary/50 bg-secondary/30 hover:bg-secondary/50 transition-all duration-300"
-                >
-                  <motion.div
-                    className="w-16 h-16 bg-gradient-to-br from-primary/40 to-accent/40 rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer"
-                    whileHover={{ scale: 1.1, rotate: 10 }}
-                    transition={{ type: 'spring', stiffness: 200 }}
-                  >
-                    <span className="text-3xl">👤</span>
-                  </motion.div>
-                  <h3 className="text-2xl font-bold text-foreground mb-3">Expert Leadership</h3>
-                  <p className="text-muted-foreground">
-                    Led by CEO Hamza with years of automotive expertise
-                  </p>
-                </motion.div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <motion.div
+                      variants={itemVariants}
+                      whileHover={{ y: -10, scale: 1.02 }}
+                      className="cursor-pointer text-center p-8 rounded-xl border border-border/50 hover:border-primary/50 bg-secondary/30 hover:bg-secondary/50 transition-all duration-300"
+                    >
+                      <motion.div
+                        className="w-16 h-16 bg-gradient-to-br from-primary/40 to-accent/40 rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer"
+                        whileHover={{ scale: 1.1, rotate: 10 }}
+                        transition={{ type: 'spring', stiffness: 200 }}
+                      >
+                        <span className="text-3xl">🏆</span>
+                      </motion.div>
+                      <h3 className="text-2xl font-bold text-foreground mb-3">Premium Quality</h3>
+                      <p className="text-muted-foreground">
+                        Carefully curated collection of verified authentic exotic vehicles
+                      </p>
+                    </motion.div>
 
-                <motion.div
-                  variants={itemVariants}
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  className="cursor-pointer text-center p-8 rounded-xl border border-border/50 hover:border-primary/50 bg-secondary/30 hover:bg-secondary/50 transition-all duration-300"
-                >
-                  <motion.div
-                    className="w-16 h-16 bg-gradient-to-br from-primary/40 to-accent/40 rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer"
-                    whileHover={{ scale: 1.1, rotate: 10 }}
-                    transition={{ type: 'spring', stiffness: 200 }}
-                  >
-                    <span className="text-3xl">📍</span>
-                  </motion.div>
-                  <h3 className="text-2xl font-bold text-foreground mb-3">Located in Faisalabad</h3>
-                  <p className="text-muted-foreground">
-                    Visit our showroom or call us at <br></br>92 3333337270
-                  </p>
+                    <motion.div
+                      variants={itemVariants}
+                      whileHover={{ y: -10, scale: 1.02 }}
+                      className="cursor-pointer text-center p-8 rounded-xl border border-border/50 hover:border-primary/50 bg-secondary/30 hover:bg-secondary/50 transition-all duration-300"
+                    >
+                      <motion.div
+                        className="w-16 h-16 bg-gradient-to-br from-primary/40 to-accent/40 rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer"
+                        whileHover={{ scale: 1.1, rotate: 10 }}
+                        transition={{ type: 'spring', stiffness: 200 }}
+                      >
+                        <span className="text-3xl">👤</span>
+                      </motion.div>
+                      <h3 className="text-2xl font-bold text-foreground mb-3">Expert Leadership</h3>
+                      <p className="text-muted-foreground">
+                        Led by CEO Hamza with years of automotive expertise
+                      </p>
+                    </motion.div>
+
+                    <motion.div
+                      variants={itemVariants}
+                      whileHover={{ y: -10, scale: 1.02 }}
+                      className="cursor-pointer text-center p-8 rounded-xl border border-border/50 hover:border-primary/50 bg-secondary/30 hover:bg-secondary/50 transition-all duration-300"
+                    >
+                      <motion.div
+                        className="w-16 h-16 bg-gradient-to-br from-primary/40 to-accent/40 rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer"
+                        whileHover={{ scale: 1.1, rotate: 10 }}
+                        transition={{ type: 'spring', stiffness: 200 }}
+                      >
+                        <span className="text-3xl">📍</span>
+                      </motion.div>
+                      <h3 className="text-2xl font-bold text-foreground mb-3">Located in Faisalabad</h3>
+                      <p className="text-muted-foreground">
+                        Visit our showroom or call us at <br></br>92 3333337270
+                      </p>
+                    </motion.div>
+                  </div>
                 </motion.div>
               </div>
-            </motion.div>
-          </div>
-        </section>
+            </section>
 
-        {/* Testimonials Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background relative overflow-hidden">
-          {/* Glassmorphic Ferrari Background */}
-          <FerrariParallax scrollRange={[0, 1000]} offsetX={50} />
-          
-          <ParallaxSection className="absolute inset-0 opacity-5">
-            <div className="text-6xl font-bold text-primary">Trust</div>
-          </ParallaxSection>
-          <div className="max-w-7xl mx-auto relative z-10">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={containerVariants}
-              className="mb-16"
-            >
-              <motion.h2
-                variants={itemVariants}
-                className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-center"
-              >
-                What Our Clients Say
-              </motion.h2>
-              <motion.p
-                variants={itemVariants}
-                className="text-muted-foreground text-lg text-center max-w-2xl mx-auto"
-              >
-                Experience the satisfaction of our valued customers who trust us with their exotic car purchases
-              </motion.p>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={containerVariants}
-              className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            >
-              {[
-                {
-                  name: "Ahmed Hassan",
-                  role: "Business Entrepreneur",
-                  content: "Auto Land International provided exceptional service. The Porsche 911 I purchased exceeded all my expectations. Highly recommended!",
-                  rating: 5,
-                },
-                {
-                  name: "Fatima Khan",
-                  role: "Luxury Collector",
-                  content: "The attention to detail and professionalism at Auto Land is unmatched. CEO Hamza and his team made the buying experience seamless and enjoyable.",
-                  rating: 5,
-                },
-                {
-                  name: "Muhammad Ali",
-                  role: "Investment Manager",
-                  content: "I trusted Auto Land with my exotic car investment. Their expertise and transparent pricing gave me complete confidence in my purchase.",
-                  rating: 5,
-                },
-              ].map((testimonial, index) => (
+            {/* What Our Clients Say */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-secondary/5 relative overflow-hidden">
+              <ParallaxSection className="absolute inset-0 opacity-5">
+                <div className="text-6xl font-bold text-primary">Trust</div>
+              </ParallaxSection>
+              <div className="max-w-7xl mx-auto relative z-10">
                 <motion.div
-                  key={index}
-                  variants={itemVariants}
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  className="cursor-pointer p-8 rounded-xl border border-border/50 hover:border-primary/50 bg-secondary/30 hover:bg-secondary/50 transition-all duration-300 backdrop-blur-sm"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={containerVariants}
+                  className="mb-16"
                 >
-                  <motion.div className="mb-4 flex gap-1">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <motion.span
-                        key={i}
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="text-accent text-lg"
-                      >
-                        ★
-                      </motion.span>
-                    ))}
-                  </motion.div>
-
+                  <motion.h2
+                    variants={itemVariants}
+                    className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-center"
+                  >
+                    What Our Clients Say
+                  </motion.h2>
                   <motion.p
-                    className="text-foreground mb-6 text-lg leading-relaxed italic"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
+                    variants={itemVariants}
+                    className="text-muted-foreground text-lg text-center max-w-2xl mx-auto"
                   >
-                    &quot;{testimonial.content}&quot;
+                    Experience the satisfaction of our valued customers who trust us with their exotic car purchases
                   </motion.p>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="border-t border-border/50 pt-4"
-                  >
-                    <p className="text-primary font-bold text-lg">{testimonial.name}</p>
-                    <p className="text-muted-foreground text-sm">{testimonial.role}</p>
-                  </motion.div>
                 </motion.div>
-              ))}
-            </motion.div>
+
+                <motion.div
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={containerVariants}
+                  className="grid grid-cols-1 md:grid-cols-3 gap-8"
+                >
+                  {[
+                    {
+                      name: "Ahmed Hassan",
+                      role: "Business Entrepreneur",
+                      content: "Auto Land International provided exceptional service. The Porsche 911 I purchased exceeded all my expectations. Highly recommended!",
+                      rating: 5,
+                    },
+                    {
+                      name: "Fatima Khan",
+                      role: "Luxury Collector",
+                      content: "The attention to detail and professionalism at Auto Land is unmatched. CEO Hamza and his team made the buying experience seamless and enjoyable.",
+                      rating: 5,
+                    },
+                    {
+                      name: "Muhammad Ali",
+                      role: "Investment Manager",
+                      content: "I trusted Auto Land with my exotic car investment. Their expertise and transparent pricing gave me complete confidence in my purchase.",
+                      rating: 5,
+                    },
+                  ].map((testimonial, index) => (
+                    <motion.div
+                      key={index}
+                      variants={itemVariants}
+                      whileHover={{ y: -10, scale: 1.02 }}
+                      className="cursor-pointer p-8 rounded-xl border border-border/50 hover:border-primary/50 bg-secondary/30 hover:bg-secondary/50 transition-all duration-300 backdrop-blur-sm"
+                    >
+                      <motion.div className="mb-4 flex gap-1">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <motion.span
+                            key={i}
+                            initial={{ opacity: 0, scale: 0 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: i * 0.1 }}
+                            className="text-accent text-lg"
+                          >
+                            ★
+                          </motion.span>
+                        ))}
+                      </motion.div>
+
+                      <motion.p
+                        className="text-foreground mb-6 text-lg leading-relaxed italic"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                      >
+                        &quot;{testimonial.content}&quot;
+                      </motion.p>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="border-t border-border/50 pt-4"
+                      >
+                        <p className="text-primary font-bold text-lg">{testimonial.name}</p>
+                        <p className="text-muted-foreground text-sm">{testimonial.role}</p>
+                      </motion.div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
+            </section>
           </div>
         </section>
       </main>

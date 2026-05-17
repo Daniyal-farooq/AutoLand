@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 interface Vehicle {
   _id: string;
@@ -100,7 +101,7 @@ export default function AdminDashboard() {
       setUploadedImage(data.secure_url);
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Image upload failed');
+      toast.error('Image upload failed');
     } finally {
       setUploading(false);
     }
@@ -112,9 +113,10 @@ export default function AdminDashboard() {
     try {
       await fetch(`/api/vehicles/${id}`, { method: 'DELETE' });
       setVehicles(vehicles.filter((v) => v._id !== id));
+      toast.success('Vehicle deleted successfully');
     } catch (error) {
       console.error('Delete error:', error);
-      alert('Failed to delete vehicle');
+      toast.error('Failed to delete vehicle');
     }
   };
 
@@ -124,9 +126,10 @@ export default function AdminDashboard() {
     try {
       await fetch(`/api/gallery/${id}`, { method: 'DELETE' });
       setGallery(gallery.filter((g) => g._id !== id));
+      toast.success('Gallery item deleted successfully');
     } catch (error) {
       console.error('Delete error:', error);
-      alert('Failed to delete gallery item');
+      toast.error('Failed to delete gallery item');
     }
   };
 
@@ -154,7 +157,7 @@ export default function AdminDashboard() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleLogout}
-            className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/80 transition-colors"
+            className="cursor-pointer px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/80 transition-all"
           >
             Logout
           </motion.button>
@@ -179,7 +182,7 @@ export default function AdminDashboard() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
+              className={`cursor-pointer px-6 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
                 activeTab === tab.id
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-secondary text-foreground hover:bg-secondary/80'
@@ -222,13 +225,13 @@ export default function AdminDashboard() {
                         <div className="flex gap-2 mt-4">
                           <button
                             onClick={() => handleEditVehicle(vehicle)}
-                            className="flex-1 px-3 py-2 bg-primary text-primary-foreground rounded text-sm hover:bg-accent transition-colors"
+                            className="cursor-pointer flex-1 px-3 py-2 bg-primary text-primary-foreground rounded text-sm hover:bg-accent transition-all"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => handleDeleteVehicle(vehicle._id)}
-                            className="flex-1 px-3 py-2 bg-destructive text-destructive-foreground rounded text-sm hover:bg-destructive/80 transition-colors"
+                            className="cursor-pointer flex-1 px-3 py-2 bg-destructive text-destructive-foreground rounded text-sm hover:bg-destructive/80 transition-all"
                           >
                             Delete
                           </button>
@@ -264,7 +267,7 @@ export default function AdminDashboard() {
                         <p className="text-muted-foreground text-sm">{item.brand}</p>
                         <button
                           onClick={() => handleDeleteGallery(item._id)}
-                          className="w-full mt-3 px-3 py-2 bg-destructive text-destructive-foreground rounded text-sm hover:bg-destructive/80 transition-colors"
+                          className="cursor-pointer w-full mt-3 px-3 py-2 bg-destructive text-destructive-foreground rounded text-sm hover:bg-destructive/80 transition-all"
                         >
                           Delete
                         </button>
@@ -359,7 +362,7 @@ function VehicleFormComponent({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!uploadedImage) {
-      alert('Please upload an image');
+      toast.error('Please upload an image');
       return;
     }
 
@@ -382,12 +385,14 @@ function VehicleFormComponent({
       });
 
       if (response.ok) {
-        alert('Vehicle added successfully!');
+        toast.success('Vehicle added successfully!');
         onSuccess();
+      } else {
+        toast.error('Failed to add vehicle');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Failed to add vehicle');
+      toast.error('Failed to add vehicle');
     } finally {
       setLoading(false);
     }
@@ -577,15 +582,15 @@ function VehicleFormComponent({
         />
       </div>
 
-      <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        type="submit"
-        disabled={loading}
-        className="w-full px-6 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-accent transition-colors disabled:opacity-50"
-      >
-        {loading ? 'Adding...' : 'Add Vehicle'}
-      </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          type="submit"
+          disabled={loading}
+          className="cursor-pointer w-full px-6 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-accent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? 'Adding...' : 'Add Vehicle'}
+        </motion.button>
     </motion.form>
   );
 }
@@ -619,7 +624,7 @@ function GalleryFormComponent({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!uploadedImage) {
-      alert('Please upload an image');
+      toast.error('Please upload an image');
       return;
     }
 
@@ -635,12 +640,14 @@ function GalleryFormComponent({
       });
 
       if (response.ok) {
-        alert('Gallery item added successfully!');
+        toast.success('Gallery item added successfully!');
         onSuccess();
+      } else {
+        toast.error('Failed to add gallery item');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Failed to add gallery item');
+      toast.error('Failed to add gallery item');
     } finally {
       setLoading(false);
     }
@@ -726,11 +733,11 @@ function GalleryFormComponent({
       </div>
 
       <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         type="submit"
         disabled={loading}
-        className="w-full px-6 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-accent transition-colors disabled:opacity-50"
+        className="cursor-pointer w-full px-6 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-accent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? 'Adding...' : 'Add to Gallery'}
       </motion.button>
@@ -805,7 +812,7 @@ function EditVehicleModal({
       setCloudinaryId(data.public_id); // Store the public_id for future deletion
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Image upload failed');
+      toast.error('Image upload failed');
     } finally {
       setUploading(false);
     }
@@ -834,14 +841,14 @@ function EditVehicleModal({
       });
 
       if (response.ok) {
-        alert('Vehicle updated successfully!');
+        toast.success('Vehicle updated successfully!');
         onSuccess();
       } else {
-        alert('Failed to update vehicle');
+        toast.error('Failed to update vehicle');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Failed to update vehicle');
+      toast.error('Failed to update vehicle');
     } finally {
       setLoading(false);
     }
@@ -859,7 +866,7 @@ function EditVehicleModal({
           <h2 className="text-2xl font-bold text-foreground">Edit Vehicle</h2>
           <button
             onClick={onClose}
-            className="text-muted-foreground hover:text-foreground transition-colors text-2xl leading-none"
+            className="cursor-pointer text-muted-foreground hover:text-foreground transition-all text-2xl leading-none"
           >
             ×
           </button>
@@ -1043,20 +1050,20 @@ function EditVehicleModal({
 
           <div className="flex gap-4 pt-6">
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               type="submit"
               disabled={loading}
-              className="flex-1 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-accent transition-colors disabled:opacity-50"
+              className="cursor-pointer flex-1 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-accent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Updating...' : 'Update Vehicle'}
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-secondary text-foreground font-bold rounded-lg hover:bg-secondary/80 transition-colors"
+              className="cursor-pointer flex-1 px-6 py-3 bg-secondary text-foreground font-bold rounded-lg hover:bg-secondary/80 transition-all"
             >
               Cancel
             </motion.button>

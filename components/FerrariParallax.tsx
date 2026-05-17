@@ -20,19 +20,23 @@ export default function FerrariParallax({
   });
 
   // Parallax effect - Ferrari moves slower than scroll for depth
-  const yOffset = useTransform(scrollYProgress, [0, 1], [0, -150]);
-  const xOffset = useTransform(scrollYProgress, [0, 1], [offsetX, offsetX - 50]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const yOffset = useTransform(scrollYProgress, [0, 1], [0, -250]);
+  const xOffset = useTransform(scrollYProgress, [0, 1], [offsetX, offsetX - 80]);
+  const opacity = useTransform(scrollYProgress, [0, 0.08, 0.92, 1], [0, 0.9, 0.9, 0]);
 
   return (
-    <div ref={ref} className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div
+      ref={ref}
+      className="absolute right-0 top-0 w-full overflow-hidden pointer-events-none"
+      style={{ height: '100%' }}
+    >
       <motion.div
         style={{
           y: yOffset,
           x: xOffset,
           opacity,
         }}
-        className="absolute top-1/2 right-0 -translate-y-1/2 w-full max-w-4xl h-auto"
+        className="absolute top-1/2 -translate-y-1/2 -right-4 md:right-0 w-full max-w-7xl h-auto"
       >
         {/* Fire Glow - Back Layer */}
         <motion.div

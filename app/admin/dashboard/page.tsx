@@ -22,6 +22,20 @@ interface GalleryItem {
 
 type TabType = 'vehicles' | 'gallery' | 'add-vehicle' | 'add-gallery';
 
+interface EditingVehicle extends Vehicle {
+  model?: string;
+  year?: number;
+  description?: string;
+  cloudinaryId?: string;
+  specifications?: {
+    engine: string;
+    horsepower: number;
+    topSpeed: number;
+    acceleration: string;
+    transmission: string;
+  };
+}
+
 export default function AdminDashboard() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('vehicles');
@@ -30,6 +44,8 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [uploadedImage, setUploadedImage] = useState('');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingVehicle, setEditingVehicle] = useState<EditingVehicle | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -109,6 +125,16 @@ export default function AdminDashboard() {
       console.error('Delete error:', error);
       alert('Failed to delete gallery item');
     }
+  };
+
+  const handleEditVehicle = (vehicle: Vehicle) => {
+    setEditingVehicle(vehicle as EditingVehicle);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditingVehicle(null);
   };
 
   return (
@@ -191,7 +217,10 @@ export default function AdminDashboard() {
                         <p className="text-primary font-bold">PKR {vehicle.price.toLocaleString()}</p>
                         <p className="text-muted-foreground text-sm capitalize">{vehicle.category}</p>
                         <div className="flex gap-2 mt-4">
-                          <button className="flex-1 px-3 py-2 bg-primary text-primary-foreground rounded text-sm hover:bg-accent transition-colors">
+                          <button
+                            onClick={() => handleEditVehicle(vehicle)}
+                            className="flex-1 px-3 py-2 bg-primary text-primary-foreground rounded text-sm hover:bg-accent transition-colors"
+                          >
                             Edit
                           </button>
                           <button
@@ -271,6 +300,18 @@ export default function AdminDashboard() {
           </>
         )}
       </div>
+
+      {/* Edit Vehicle Modal */}
+      {isEditModalOpen && editingVehicle && (
+        <EditVehicleModal
+          vehicle={editingVehicle}
+          onClose={handleCloseEditModal}
+          onSuccess={() => {
+            handleCloseEditModal();
+            fetchData();
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -377,125 +418,161 @@ function VehicleFormComponent({
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <input
-          type="text"
-          name="brand"
-          value={formData.brand}
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Brand</label>
+          <input
+            type="text"
+            name="brand"
+            value={formData.brand}
+            onChange={handleChange}
+            placeholder="e.g., Porsche"
+            required
+            className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Name</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="e.g., 911"
+            required
+            className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Model</label>
+          <input
+            type="text"
+            name="model"
+            value={formData.model}
+            onChange={handleChange}
+            placeholder="Model"
+            className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Category</label>
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          >
+            <option value="sports">Sports</option>
+            <option value="luxury">Luxury</option>
+            <option value="suv">SUV</option>
+            <option value="convertible">Convertible</option>
+            <option value="exotic">Exotic</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Year</label>
+          <input
+            type="number"
+            name="year"
+            value={formData.year}
+            onChange={handleChange}
+            placeholder="Year"
+            className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Price (PKR)</label>
+          <input
+            type="number"
+            name="price"
+            value={formData.price}
+            onChange={handleChange}
+            placeholder="Price"
+            required
+            className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-foreground mb-2">Description</label>
+        <textarea
+          name="description"
+          value={formData.description}
           onChange={handleChange}
-          placeholder="Brand (e.g., Porsche)"
+          placeholder="Describe the vehicle"
           required
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-        />
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Name (e.g., 911)"
-          required
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          rows={4}
+          className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <input
-          type="text"
-          name="model"
-          value={formData.model}
-          onChange={handleChange}
-          placeholder="Model"
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-        />
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-        >
-          <option value="sports">Sports</option>
-          <option value="luxury">Luxury</option>
-          <option value="suv">SUV</option>
-          <option value="convertible">Convertible</option>
-          <option value="exotic">Exotic</option>
-        </select>
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Engine</label>
+          <input
+            type="text"
+            name="engine"
+            value={formData.engine}
+            onChange={handleChange}
+            placeholder="e.g., 3.0L Twin-Turbo"
+            className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Horsepower</label>
+          <input
+            type="number"
+            name="horsepower"
+            value={formData.horsepower}
+            onChange={handleChange}
+            placeholder="Horsepower"
+            className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <input
-          type="number"
-          name="year"
-          value={formData.year}
-          onChange={handleChange}
-          placeholder="Year"
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-        />
-        <input
-          type="number"
-          name="price"
-          value={formData.price}
-          onChange={handleChange}
-          placeholder="Price"
-          required
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-        />
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Top Speed (mph)</label>
+          <input
+            type="number"
+            name="topSpeed"
+            value={formData.topSpeed}
+            onChange={handleChange}
+            placeholder="Top Speed"
+            className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Acceleration (0-100)</label>
+          <input
+            type="text"
+            name="acceleration"
+            value={formData.acceleration}
+            onChange={handleChange}
+            placeholder="e.g., 3.7 sec"
+            className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          />
+        </div>
       </div>
 
-      <textarea
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        placeholder="Description"
-        required
-        rows={4}
-        className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-      />
-
-      <div className="grid grid-cols-2 gap-4">
+      <div>
+        <label className="block text-sm font-medium text-foreground mb-2">Transmission</label>
         <input
           type="text"
-          name="engine"
-          value={formData.engine}
+          name="transmission"
+          value={formData.transmission}
           onChange={handleChange}
-          placeholder="Engine"
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-        />
-        <input
-          type="number"
-          name="horsepower"
-          value={formData.horsepower}
-          onChange={handleChange}
-          placeholder="Horsepower"
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+          placeholder="e.g., PDK Automatic"
+          className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
         />
       </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <input
-          type="number"
-          name="topSpeed"
-          value={formData.topSpeed}
-          onChange={handleChange}
-          placeholder="Top Speed"
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-        />
-        <input
-          type="text"
-          name="acceleration"
-          value={formData.acceleration}
-          onChange={handleChange}
-          placeholder="0-100 Acceleration"
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-        />
-      </div>
-
-      <input
-        type="text"
-        name="transmission"
-        value={formData.transmission}
-        onChange={handleChange}
-        placeholder="Transmission"
-        className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-      />
 
       <motion.button
         whileHover={{ scale: 1.02 }}
@@ -593,45 +670,57 @@ function GalleryFormComponent({
         )}
       </div>
 
-      <input
-        type="text"
-        name="title"
-        value={formData.title}
-        onChange={handleChange}
-        placeholder="Title"
-        required
-        className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-      />
+      <div>
+        <label className="block text-sm font-medium text-foreground mb-2">Title</label>
+        <input
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          placeholder="Gallery item title"
+          required
+          className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+        />
+      </div>
 
-      <input
-        type="text"
-        name="brand"
-        value={formData.brand}
-        onChange={handleChange}
-        placeholder="Brand"
-        required
-        className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-      />
+      <div>
+        <label className="block text-sm font-medium text-foreground mb-2">Brand</label>
+        <input
+          type="text"
+          name="brand"
+          value={formData.brand}
+          onChange={handleChange}
+          placeholder="Vehicle brand"
+          required
+          className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+        />
+      </div>
 
-      <textarea
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        placeholder="Description"
-        required
-        rows={4}
-        className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-      />
+      <div>
+        <label className="block text-sm font-medium text-foreground mb-2">Description</label>
+        <textarea
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Describe the gallery image"
+          required
+          rows={4}
+          className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+        />
+      </div>
 
-      <textarea
-        name="specs"
-        value={formData.specs}
-        onChange={handleChange}
-        placeholder="Specifications"
-        required
-        rows={3}
-        className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
-      />
+      <div>
+        <label className="block text-sm font-medium text-foreground mb-2">Specifications</label>
+        <textarea
+          name="specs"
+          value={formData.specs}
+          onChange={handleChange}
+          placeholder="Vehicle specifications"
+          required
+          rows={3}
+          className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+        />
+      </div>
 
       <motion.button
         whileHover={{ scale: 1.02 }}
@@ -643,5 +732,334 @@ function GalleryFormComponent({
         {loading ? 'Adding...' : 'Add to Gallery'}
       </motion.button>
     </motion.form>
+  );
+}
+
+// Edit Vehicle Modal Component
+function EditVehicleModal({
+  vehicle,
+  onClose,
+  onSuccess,
+}: {
+  vehicle: EditingVehicle;
+  onClose: () => void;
+  onSuccess: () => void;
+}) {
+  const [formData, setFormData] = useState({
+    name: vehicle.name || '',
+    brand: vehicle.brand || '',
+    model: vehicle.model || '',
+    category: vehicle.category || 'sports',
+    year: vehicle.year || new Date().getFullYear(),
+    price: vehicle.price || 0,
+    description: vehicle.description || '',
+    engine: vehicle.specifications?.engine || '',
+    horsepower: vehicle.specifications?.horsepower || 0,
+    topSpeed: vehicle.specifications?.topSpeed || 0,
+    acceleration: vehicle.specifications?.acceleration || '',
+    transmission: vehicle.specifications?.transmission || '',
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [vehicleImage, setVehicleImage] = useState(vehicle.image);
+  const [cloudinaryId, setCloudinaryId] = useState(vehicle.cloudinaryId || '');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: ['year', 'price', 'horsepower', 'topSpeed'].includes(name) ? parseInt(value) : value,
+    }));
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+
+    setUploading(true);
+
+    try {
+      // Delete old image from Cloudinary first if cloudinaryId exists
+      if (cloudinaryId) {
+        await fetch('/api/delete-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ publicId: cloudinaryId }),
+        });
+      }
+
+      // Upload new image
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', e.target.files[0]);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formDataUpload,
+      });
+
+      const data = await response.json();
+      setVehicleImage(data.secure_url);
+      setCloudinaryId(data.public_id); // Store the public_id for future deletion
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Image upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await fetch(`/api/vehicles/${vehicle._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          image: vehicleImage,
+          cloudinaryId: cloudinaryId,
+          specifications: {
+            engine: formData.engine,
+            horsepower: formData.horsepower,
+            topSpeed: formData.topSpeed,
+            acceleration: formData.acceleration,
+            transmission: formData.transmission,
+          },
+        }),
+      });
+
+      if (response.ok) {
+        alert('Vehicle updated successfully!');
+        onSuccess();
+      } else {
+        alert('Failed to update vehicle');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to update vehicle');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto bg-secondary/50 border border-border rounded-lg p-8"
+      >
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-foreground">Edit Vehicle</h2>
+          <button
+            onClick={onClose}
+            className="text-muted-foreground hover:text-foreground transition-colors text-2xl leading-none"
+          >
+            ×
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Image Upload */}
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">Vehicle Image</label>
+            <div className="flex items-center gap-4">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploading}
+                className="flex-1"
+              />
+              {uploading && <p className="text-muted-foreground">Uploading...</p>}
+            </div>
+            {vehicleImage && (
+              <img src={vehicleImage} alt="Vehicle preview" className="mt-4 h-40 object-cover rounded-lg" />
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Brand</label>
+              <input
+                type="text"
+                name="brand"
+                value={formData.brand}
+                onChange={handleChange}
+                placeholder="e.g., Porsche"
+                required
+                className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="e.g., 911"
+                required
+                className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Model</label>
+              <input
+                type="text"
+                name="model"
+                value={formData.model}
+                onChange={handleChange}
+                placeholder="Model"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Category</label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+              >
+                <option value="sports">Sports</option>
+                <option value="luxury">Luxury</option>
+                <option value="suv">SUV</option>
+                <option value="convertible">Convertible</option>
+                <option value="exotic">Exotic</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Year</label>
+              <input
+                type="number"
+                name="year"
+                value={formData.year}
+                onChange={handleChange}
+                placeholder="Year"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Price (PKR)</label>
+              <input
+                type="number"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                placeholder="Price"
+                required
+                className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Describe the vehicle"
+              required
+              rows={4}
+              className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Engine</label>
+              <input
+                type="text"
+                name="engine"
+                value={formData.engine}
+                onChange={handleChange}
+                placeholder="e.g., 3.0L Twin-Turbo"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Horsepower</label>
+              <input
+                type="number"
+                name="horsepower"
+                value={formData.horsepower}
+                onChange={handleChange}
+                placeholder="Horsepower"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Top Speed (mph)</label>
+              <input
+                type="number"
+                name="topSpeed"
+                value={formData.topSpeed}
+                onChange={handleChange}
+                placeholder="Top Speed"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Acceleration (0-100)</label>
+              <input
+                type="text"
+                name="acceleration"
+                value={formData.acceleration}
+                onChange={handleChange}
+                placeholder="e.g., 3.7 sec"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">Transmission</label>
+            <input
+              type="text"
+              name="transmission"
+              value={formData.transmission}
+              onChange={handleChange}
+              placeholder="e.g., PDK Automatic"
+              className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground"
+            />
+          </div>
+
+          <div className="flex gap-4 pt-6">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              disabled={loading}
+              className="flex-1 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-accent transition-colors disabled:opacity-50"
+            >
+              {loading ? 'Updating...' : 'Update Vehicle'}
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-6 py-3 bg-secondary text-foreground font-bold rounded-lg hover:bg-secondary/80 transition-colors"
+            >
+              Cancel
+            </motion.button>
+          </div>
+        </form>
+      </motion.div>
+    </div>
   );
 }

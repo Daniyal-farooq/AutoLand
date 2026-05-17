@@ -308,9 +308,9 @@ export default function Home() {
                   >
                     <span className="text-3xl">📍</span>
                   </motion.div>
-                  <h3 className="text-2xl font-bold text-foreground mb-3">Located in Islamabad</h3>
+                  <h3 className="text-2xl font-bold text-foreground mb-3">Located in Faisalabad</h3>
                   <p className="text-muted-foreground">
-                    Visit our showroom or call us at 92 3333337270
+                    Visit our showroom or call us at <br></br>92 3333337270
                   </p>
                 </motion.div>
               </div>
